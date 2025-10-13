@@ -1,0 +1,17 @@
+# API 서버용 추가 의존성
+
+# FastAPI 및 서버
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.0.0
+python-multipart>=0.0.6
+
+# 비동기 처리
+aiofiles>=23.0.0
+
+# 모니터링 및 로깅
+prometheus-client>=0.18.0
+
+# 유틸리티
+python-dotenv>=1.0.0
+

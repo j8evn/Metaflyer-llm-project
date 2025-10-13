@@ -1,0 +1,88 @@
+# DPO (Direct Preference Optimization) 학습 설정 파일
+
+# 모델 설정
+model:
+  name: "meta-llama/Llama-2-7b-hf"  # Hugging Face 모델 ID
+  cache_dir: "./models/cache"  # 모델 캐시 디렉토리
+  trust_remote_code: false  # 원격 코드 실행 허용 여부
+
+# 데이터 설정
+data:
+  train_path: "data/preference_train.json"  # 선호도 학습 데이터 경로
+  eval_path: "data/preference_eval.json"    # 선호도 검증 데이터 경로 (선택사항)
+  max_length: 512                            # 최대 시퀀스 길이
+  max_prompt_length: 256                     # 최대 프롬프트 길이
+
+# DPO 특화 설정
+dpo:
+  beta: 0.1                    # DPO 손실 함수의 온도 파라미터 (높을수록 참조 모델에 가까움)
+  loss_type: "sigmoid"         # 손실 함수 타입: sigmoid, hinge, ipo, kto_pair
+  use_peft_for_reference: true # PEFT 사용 시 참조 모델 자동 처리
+  label_smoothing: 0.0         # 레이블 스무딩 (0.0 ~ 1.0)
+  
+# 학습 설정
+training:
+  output_dir: "outputs/dpo_checkpoints"  # 체크포인트 저장 디렉토리
+  num_epochs: 1                          # 학습 에포크 수 (DPO는 보통 1-2 에포크면 충분)
+  batch_size: 4                          # 배치 크기
+  gradient_accumulation_steps: 4         # 그래디언트 누적 스텝
+  learning_rate: 5.0e-7                  # 학습률 (DPO는 낮은 학습률 권장)
+  warmup_steps: 100                      # 워밍업 스텝
+  weight_decay: 0.0                      # 가중치 감쇠
+  max_grad_norm: 1.0                     # 그래디언트 클리핑
+  save_steps: 100                        # 체크포인트 저장 주기
+  eval_steps: 100                        # 평가 주기
+  logging_steps: 10                      # 로깅 주기
+  save_total_limit: 3                    # 저장할 최대 체크포인트 수
+
+# LoRA 설정 (Parameter-Efficient Fine-Tuning)
+lora:
+  use_lora: true       # LoRA 사용 여부 (DPO에서도 권장)
+  r: 16                # LoRA rank
+  lora_alpha: 32       # LoRA alpha
+  lora_dropout: 0.05   # LoRA dropout
+  target_modules:      # LoRA 적용할 모듈
+    - "q_proj"
+    - "v_proj"
+    - "k_proj"
+    - "o_proj"
+    - "gate_proj"
+    - "up_proj"
+    - "down_proj"
+  bias: "none"         # bias 학습 여부
+
+# 양자화 설정
+quantization:
+  use_quantization: false  # 양자화 사용 여부
+  bits: 4                   # 4bit 또는 8bit
+  compute_dtype: "float16"  # 계산 데이터 타입
+
+# 옵티마이저 설정
+optimizer:
+  name: "adamw_torch"      # adamw_torch, adamw_8bit, sgd 등
+  lr_scheduler: "cosine"   # linear, cosine, polynomial 등
+
+# 고급 설정
+advanced:
+  gradient_checkpointing: true  # 그래디언트 체크포인팅 (메모리 절약)
+  fp16: false                   # FP16 혼합 정밀도
+  bf16: true                    # BF16 혼합 정밀도 (A100/H100 권장)
+  dataloader_num_workers: 4     # 데이터 로더 워커 수
+  ddp_find_unused_parameters: false  # DDP 설정
+
+# 모니터링 설정
+monitoring:
+  use_wandb: false              # WandB 사용 여부
+  wandb_project: "llm-dpo"      # WandB 프로젝트 이름
+  use_tensorboard: true         # TensorBoard 사용 여부
+  report_to: ["tensorboard"]    # 리포팅 도구
+
+# 추론 설정
+inference:
+  max_new_tokens: 256           # 생성할 최대 토큰 수
+  temperature: 0.7              # 샘플링 온도
+  top_p: 0.9                    # Top-p 샘플링
+  top_k: 50                     # Top-k 샘플링
+  repetition_penalty: 1.1       # 반복 패널티
+  do_sample: true               # 샘플링 사용 여부
+
