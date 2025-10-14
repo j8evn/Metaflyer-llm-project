@@ -1,0 +1,194 @@
+# 지원 모델 목록
+# 이 파일은 프로젝트에서 테스트되고 검증된 모델들을 나열합니다.
+
+# Meta AI 모델
+meta:
+  llama-2-7b:
+    hf_id: "meta-llama/Llama-2-7b-hf"
+    size: "7B"
+    context_length: 4096
+    license: "Llama 2 Community License"
+    auth_required: true
+    recommended_settings:
+      lora_r: 16
+      lora_alpha: 32
+      batch_size: 4
+  
+  llama-2-13b:
+    hf_id: "meta-llama/Llama-2-13b-hf"
+    size: "13B"
+    context_length: 4096
+    license: "Llama 2 Community License"
+    auth_required: true
+    recommended_settings:
+      lora_r: 16
+      lora_alpha: 32
+      batch_size: 2
+
+# Mistral AI 모델
+mistral:
+  mistral-7b:
+    hf_id: "mistralai/Mistral-7B-v0.1"
+    size: "7B"
+    context_length: 8192
+    license: "Apache 2.0"
+    recommended_settings:
+      lora_r: 16
+      lora_alpha: 32
+      batch_size: 4
+  
+  mixtral-8x7b:
+    hf_id: "mistralai/Mixtral-8x7B-v0.1"
+    size: "8x7B (MoE)"
+    context_length: 32768
+    license: "Apache 2.0"
+    recommended_settings:
+      lora_r: 16
+      lora_alpha: 32
+      batch_size: 1
+
+# Google 모델
+google:
+  gemma-2b:
+    hf_id: "google/gemma-2b"
+    size: "2B"
+    context_length: 8192
+    license: "Gemma Terms of Use"
+    auth_required: true
+    recommended_settings:
+      lora_r: 8
+      lora_alpha: 16
+      batch_size: 8
+  
+  gemma-7b:
+    hf_id: "google/gemma-7b"
+    size: "7B"
+    context_length: 8192
+    license: "Gemma Terms of Use"
+    auth_required: true
+    recommended_settings:
+      lora_r: 16
+      lora_alpha: 32
+      batch_size: 4
+
+# Alibaba 모델
+alibaba:
+  qwen-7b:
+    hf_id: "Qwen/Qwen-7B"
+    size: "7B"
+    context_length: 8192
+    license: "Tongyi Qianwen License"
+    trust_remote_code: true
+    recommended_settings:
+      lora_r: 16
+      lora_alpha: 32
+      batch_size: 4
+
+# TII 모델
+tii:
+  falcon-7b:
+    hf_id: "tiiuae/falcon-7b"
+    size: "7B"
+    context_length: 2048
+    license: "Apache 2.0"
+    trust_remote_code: true
+    recommended_settings:
+      lora_r: 16
+      lora_alpha: 32
+      batch_size: 4
+
+# Microsoft 모델
+microsoft:
+  phi-2:
+    hf_id: "microsoft/phi-2"
+    size: "2.7B"
+    context_length: 2048
+    license: "MIT"
+    recommended_settings:
+      lora_r: 8
+      lora_alpha: 16
+      batch_size: 8
+
+# EleutherAI 모델
+eleuther:
+  gpt-j-6b:
+    hf_id: "EleutherAI/gpt-j-6b"
+    size: "6B"
+    context_length: 2048
+    license: "Apache 2.0"
+    recommended_settings:
+      lora_r: 16
+      lora_alpha: 32
+      batch_size: 4
+  
+  pythia-6.9b:
+    hf_id: "EleutherAI/pythia-6.9b"
+    size: "6.9B"
+    context_length: 2048
+    license: "Apache 2.0"
+    recommended_settings:
+      lora_r: 16
+      lora_alpha: 32
+      batch_size: 4
+
+# OpenAI 모델 (오픈 소스)
+openai:
+  gpt2:
+    hf_id: "gpt2"
+    size: "124M"
+    context_length: 1024
+    license: "MIT"
+    recommended_settings:
+      lora_r: 8
+      lora_alpha: 16
+      batch_size: 16
+  
+  gpt2-medium:
+    hf_id: "gpt2-medium"
+    size: "355M"
+    context_length: 1024
+    license: "MIT"
+    recommended_settings:
+      lora_r: 8
+      lora_alpha: 16
+      batch_size: 8
+  
+  gpt2-large:
+    hf_id: "gpt2-large"
+    size: "774M"
+    context_length: 1024
+    license: "MIT"
+    recommended_settings:
+      lora_r: 8
+      lora_alpha: 16
+      batch_size: 4
+
+# 01.AI 모델
+01ai:
+  yi-6b:
+    hf_id: "01-ai/Yi-6B"
+    size: "6B"
+    context_length: 4096
+    license: "Apache 2.0"
+    recommended_settings:
+      lora_r: 16
+      lora_alpha: 32
+      batch_size: 4
+
+# Stability AI 모델
+stability:
+  stablelm-3b:
+    hf_id: "stabilityai/stablelm-3b-4e1t"
+    size: "3B"
+    context_length: 4096
+    license: "Apache 2.0"
+    recommended_settings:
+      lora_r: 8
+      lora_alpha: 16
+      batch_size: 8
+
+# 사용 예제:
+# python src/train.py --model_name "mistralai/Mistral-7B-v0.1"
+# python src/train.py --model_name "google/gemma-7b"
+# python src/train.py --model_name "gpt2"
+
