@@ -1,0 +1,252 @@
+[
+    {
+        "image": "data/images/iu_01.jpg",
+        "text_input": "이 인물은 누구입니까?",
+        "text_output": "아이유"
+    },
+    {
+        "image": "data/images/iu_02.jpg",
+        "text_input": "사진 속 사람은 누구인가요?",
+        "text_output": "아이유"
+    },
+    {
+        "image": "data/images/iu_03.jpg",
+        "text_input": "이 유명인의 이름을 알려줘.",
+        "text_output": "아이유"
+    },
+    {
+        "image": "data/images/iu_04.jpg",
+        "text_input": "누구의 얼굴인가?",
+        "text_output": "아이유"
+    },
+    {
+        "image": "data/images/iu_05.jpg",
+        "text_input": "이 인물은 누구처럼 보이나요?",
+        "text_output": "아이유"
+    },
+    {
+        "image": "data/images/iu_06.jpg",
+        "text_input": "이 사진 속 인물은 누구죠?",
+        "text_output": "아이유"
+    },
+    {
+        "image": "data/images/iu_07.jpg",
+        "text_input": "누구인지 말해줘.",
+        "text_output": "아이유"
+    },
+    {
+        "image": "data/images/iu_08.jpg",
+        "text_input": "이 인물의 이름은?",
+        "text_output": "아이유"
+    },
+    {
+        "image": "data/images/iu_09.jpg",
+        "text_input": "이 사람 누구야?",
+        "text_output": "아이유"
+    },
+    {
+        "image": "data/images/iu_10.jpg",
+        "text_input": "이 사진은 어떤 인물인가요?",
+        "text_output": "아이유"
+    },
+    {
+        "image": "data/images/yjs_01.jpg",
+        "text_input": "이 유명인은 누구입니까?",
+        "text_output": "유재석"
+    },
+    {
+        "image": "data/images/yjs_02.jpg",
+        "text_input": "이 인물은 누구인가요?",
+        "text_output": "유재석"
+    },
+    {
+        "image": "data/images/yjs_03.jpg",
+        "text_input": "사진 속 사람은 누구?",
+        "text_output": "유재석"
+    },
+    {
+        "image": "data/images/yjs_04.jpg",
+        "text_input": "이 사람의 이름을 알려줘.",
+        "text_output": "유재석"
+    },
+    {
+        "image": "data/images/yjs_05.jpg",
+        "text_input": "누구의 사진인가요?",
+        "text_output": "유재석"
+    },
+    {
+        "image": "data/images/yjs_06.jpg",
+        "text_input": "사진 속 인물은 누구입니까?",
+        "text_output": "유재석"
+    },
+    {
+        "image": "data/images/yjs_07.jpg",
+        "text_input": "누구인지 맞혀봐.",
+        "text_output": "유재석"
+    },
+    {
+        "image": "data/images/yjs_08.jpg",
+        "text_input": "이 인물의 정체는?",
+        "text_output": "유재석"
+    },
+    {
+        "image": "data/images/yjs_09.jpg",
+        "text_input": "이 유명인의 이름은 무엇인가요?",
+        "text_output": "유재석"
+    },
+    {
+        "image": "data/images/yjs_10.jpg",
+        "text_input": "사진에 나온 사람은 누구입니까?",
+        "text_output": "유재석"
+    },
+    {
+        "image": "data/images/elon_01.jpg",
+        "text_input": "이 인물은 누구입니까?",
+        "text_output": "일론 머스크"
+    },
+    {
+        "image": "data/images/elon_02.jpg",
+        "text_input": "사진 속 사람은 누구인가요?",
+        "text_output": "일론 머스크"
+    },
+    {
+        "image": "data/images/elon_03.jpg",
+        "text_input": "이 유명인의 이름을 알려줘.",
+        "text_output": "일론 머스크"
+    },
+    {
+        "image": "data/images/elon_04.jpg",
+        "text_input": "누구의 얼굴인가?",
+        "text_output": "일론 머스크"
+    },
+    {
+        "image": "data/images/elon_05.jpg",
+        "text_input": "이 인물은 누구처럼 보이나요?",
+        "text_output": "일론 머스크"
+    },
+    {
+        "image": "data/images/elon_06.jpg",
+        "text_input": "이 사진 속 인물은 누구죠?",
+        "text_output": "일론 머스크"
+    },
+    {
+        "image": "data/images/elon_07.jpg",
+        "text_input": "누구인지 말해줘.",
+        "text_output": "일론 머스크"
+    },
+    {
+        "image": "data/images/elon_08.jpg",
+        "text_input": "이 인물의 이름은?",
+        "text_output": "일론 머스크"
+    },
+    {
+        "image": "data/images/elon_09.jpg",
+        "text_input": "이 사람 누구야?",
+        "text_output": "일론 머스크"
+    },
+    {
+        "image": "data/images/elon_10.jpg",
+        "text_input": "이 사진은 어떤 인물인가요?",
+        "text_output": "일론 머스크"
+    },
+    {
+        "image": "data/images/jennie_01.jpg",
+        "text_input": "이 인물은 누구입니까?",
+        "text_output": "블랙핑크 제니"
+    },
+    {
+        "image": "data/images/jennie_02.jpg",
+        "text_input": "사진 속 사람은 누구인가요?",
+        "text_output": "블랙핑크 제니"
+    },
+    {
+        "image": "data/images/jennie_03.jpg",
+        "text_input": "이 유명인의 이름을 알려줘.",
+        "text_output": "블랙핑크 제니"
+    },
+    {
+        "image": "data/images/jennie_04.jpg",
+        "text_input": "누구의 얼굴인가?",
+        "text_output": "블랙핑크 제니"
+    },
+    {
+        "image": "data/images/jennie_05.jpg",
+        "text_input": "이 인물은 누구처럼 보이나요?",
+        "text_output": "블랙핑크 제니"
+    },
+    {
+        "image": "data/images/jennie_06.jpg",
+        "text_input": "이 사진 속 인물은 누구죠?",
+        "text_output": "블랙핑크 제니"
+    },
+    {
+        "image": "data/images/jennie_07.jpg",
+        "text_input": "누구인지 말해줘.",
+        "text_output": "블랙핑크 제니"
+    },
+    {
+        "image": "data/images/jennie_08.jpg",
+        "text_input": "이 인물의 이름은?",
+        "text_output": "블랙핑크 제니"
+    },
+    {
+        "image": "data/images/jennie_09.jpg",
+        "text_input": "이 사람 누구야?",
+        "text_output": "블랙핑크 제니"
+    },
+    {
+        "image": "data/images/jennie_10.jpg",
+        "text_input": "이 사진은 어떤 인물인가요?",
+        "text_output": "블랙핑크 제니"
+    },
+    {
+        "image": "data/images/jk_01.jpg",
+        "text_input": "이 인물은 누구입니까?",
+        "text_output": "BTS 정국"
+    },
+    {
+        "image": "data/images/jk_02.jpg",
+        "text_input": "사진 속 사람은 누구인가요?",
+        "text_output": "BTS 정국"
+    },
+    {
+        "image": "data/images/jk_03.jpg",
+        "text_input": "이 유명인의 이름을 알려줘.",
+        "text_output": "BTS 정국"
+    },
+    {
+        "image": "data/images/jk_04.jpg",
+        "text_input": "누구의 얼굴인가?",
+        "text_output": "BTS 정국"
+    },
+    {
+        "image": "data/images/jk_05.jpg",
+        "text_input": "이 인물은 누구처럼 보이나요?",
+        "text_output": "BTS 정국"
+    },
+    {
+        "image": "data/images/jk_06.jpg",
+        "text_input": "이 사진 속 인물은 누구죠?",
+        "text_output": "BTS 정국"
+    },
+    {
+        "image": "data/images/jk_07.jpg",
+        "text_input": "누구인지 말해줘.",
+        "text_output": "BTS 정국"
+    },
+    {
+        "image": "data/images/jk_08.jpg",
+        "text_input": "이 인물의 이름은?",
+        "text_output": "BTS 정국"
+    },
+    {
+        "image": "data/images/jk_09.jpg",
+        "text_input": "이 사람 누구야?",
+        "text_output": "BTS 정국"
+    },
+    {
+        "image": "data/images/jk_10.jpg",
+        "text_input": "이 사진은 어떤 인물인가요?",
+        "text_output": "BTS 정국"
+    }
+]
