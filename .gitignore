@@ -51,6 +51,8 @@ data/*.json
 data/*.csv
 data/*.txt
 !data/.gitkeep
+vl-test/data/images
+vl-test/data/*.json
 
 # Output files
 outputs/
