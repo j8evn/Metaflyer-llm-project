@@ -4,12 +4,6 @@ import requests
 from PIL import Image
 from io import BytesIO
 
-# ---------------------------------------------------------
-# [설정] API 및 데이터 저장 경로
-# ---------------------------------------------------------
-# ---------------------------------------------------------
-# [설정] API 및 데이터 저장 경로
-# ---------------------------------------------------------
 NAVER_CLIENT_ID = "UvhrrH5qgzxFlnYFmkTf"
 NAVER_CLIENT_SECRET = "ICOBFihYe7"
 API_ENDPOINT = "https://openapi.naver.com/v1/search/image"
@@ -27,9 +21,6 @@ TARGET_PEOPLE = {
 }
 IMAGES_PER_PERSON = 100
 
-# ---------------------------------------------------------
-# [함수] 이미지 URL 가져오기 (Naver API)
-# ---------------------------------------------------------
 def get_image_urls(query, count):
     """
     Naver 검색 API를 사용하여 이미지 URL 리스트를 반환합니다.
@@ -67,9 +58,6 @@ def get_image_urls(query, count):
     
     return urls
 
-# ---------------------------------------------------------
-# [메인] 다운로드 및 데이터셋 생성
-# ---------------------------------------------------------
 def main():
     if not os.path.exists(SAVE_DIR):
         os.makedirs(SAVE_DIR)

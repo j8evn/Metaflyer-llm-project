@@ -59,6 +59,7 @@ outputs/
 logs/
 wandb/
 runs/
+vl-test/output/
 
 # Training logs
 *.log
