@@ -53,6 +53,7 @@ data/*.txt
 !data/.gitkeep
 vl-test/data/images
 vl-test/data/*.json
+vl-test/data/test_images
 
 # Output files
 outputs/
