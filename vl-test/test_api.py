@@ -21,7 +21,7 @@ def test_image_inference(image_path):
             {
                 "role": "user", 
                 "content": [
-                    {"type": "text", "text": "이 인물의 이름은 무엇입니까?"},
+                    {"type": "text", "text": "이 인물의 이름만 대답해주세요."},
                     {
                         "type": "image_url",
                         "image_url": {
