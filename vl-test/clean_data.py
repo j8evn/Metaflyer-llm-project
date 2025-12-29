@@ -7,6 +7,7 @@ from tqdm import tqdm
 # 설정
 DATA_DIR = "data/images"
 REJECTED_DIR = "data/rejected"
+DATASET_JSON = "data/dataset.json" # 데이터셋 파일 경로
 CHECK_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
 
 def setup_directories():
@@ -112,6 +113,46 @@ def main():
     print(f"Cropped & Saved: {cropped_count}")
     print(f"Rejected: {rejected_count}")
     print(f"Rejected images moved to: {REJECTED_DIR}")
+    
+    # 데이터셋 JSON 정리
+    validate_and_update_dataset()
+
+def validate_and_update_dataset():
+    """
+    dataset.json을 읽어서 실제 존재하는 이미지만 남기고 저장합니다.
+    """
+    import json
+    
+    print("-" * 30)
+    print("Validating dataset.json...")
+    
+    if not os.path.exists(DATASET_JSON):
+        print("dataset.json not found. Skipping.")
+        return
+
+    with open(DATASET_JSON, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    
+    cleaned_data = []
+    removed_count = 0
+    
+    for item in data:
+        # data/images/아이유_001.jpg 같은 경로라고 가정
+        image_path = item.get("image")
+        
+        if image_path and os.path.exists(image_path):
+            cleaned_data.append(item)
+        else:
+            removed_count += 1
+            
+    # 변경된 내용 저장
+    if removed_count > 0:
+        with open(DATASET_JSON, "w", encoding="utf-8") as f:
+            json.dump(cleaned_data, f, indent=4, ensure_ascii=False)
+        print(f"Updated {DATASET_JSON}: Removed {removed_count} missing entries.")
+        print(f"Remaining entries: {len(cleaned_data)}")
+    else:
+        print("dataset.json is already up to date.")
 
 if __name__ == "__main__":
     main()
