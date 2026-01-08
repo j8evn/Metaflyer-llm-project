@@ -38,7 +38,7 @@ def get_image_urls(query, count):
         "display": count,
         "start": 101, 
         "sort": "sim",
-        "filter": "medium"
+        "filter": "large"
     }
     
     try:

@@ -5,3 +5,6 @@ peft
 Pillow
 huggingface_hub
 torchvision
+opencv-python
+numpy
+facenet-pytorch

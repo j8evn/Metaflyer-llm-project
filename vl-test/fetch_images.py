@@ -41,7 +41,7 @@ def get_image_urls(query, count):
         "display": display,
         "start": 1,
         "sort": "sim", # sim: 유사도순, date: 날짜순
-        "filter": "medium" # 중간 사이즈 이상
+        "filter": "large" # 고화질 이미지 우선
     }
     
     try:
