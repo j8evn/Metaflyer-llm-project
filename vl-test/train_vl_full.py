@@ -6,7 +6,7 @@ from PIL import Image
 from peft import LoraConfig, get_peft_model, TaskType
 
 # 1. 모델 설정 (H100용 고성능 설정)
-MODEL_ID = "Qwen/Qwen3-VL-30B-A3B-Thinking"
+MODEL_ID = "Qwen/Qwen3-VL-30B-Instruct"
 
 try:
     from transformers import Qwen3VLForConditionalGeneration

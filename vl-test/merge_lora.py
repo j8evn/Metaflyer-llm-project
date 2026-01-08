@@ -4,7 +4,7 @@ from peft import PeftModel
 import os
 
 # 설정
-BASE_MODEL_ID = "Qwen/Qwen3-VL-30B-A3B-Thinking"
+BASE_MODEL_ID = "Qwen/Qwen3-VL-30B-Instruct"
 ADAPTER_PATH = None # None으로 두면 output_full에서 가장 최신 체크포인트를 자동으로 찾습니다.
 OUTPUT_DIR = "./merged_model"
 
