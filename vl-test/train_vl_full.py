@@ -82,12 +82,12 @@ class ImageTextDataset(Dataset):
         )
         
         # 정답 라벨 생성
-        full_text = text + text_output + "<|endoftext|>"
+        full_text = text + text_output + ""
         inputs_full = processor(
             text=[full_text],
             images=[image],
             padding="max_length",
-            max_length=1024, # Max Length 증가
+            max_length=2048,
             truncation=True,
             return_tensors="pt",
         )
