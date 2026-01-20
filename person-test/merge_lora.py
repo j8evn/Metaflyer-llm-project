@@ -1,29 +1,36 @@
 import torch
-from transformers import AutoProcessor, Qwen3VLForConditionalGeneration
+from transformers import AutoProcessor, AutoModelForImageTextToText
 from peft import PeftModel
 import os
 
 # 설정
 BASE_MODEL_ID = "Qwen/Qwen3-VL-30B-A3B-Instruct"
-ADAPTER_PATH = None # None으로 두면 output_full에서 가장 최신 체크포인트를 자동으로 찾습니다.
+ADAPTER_PATH = None 
 OUTPUT_DIR = "./merged_model"
 
-# 자동으로 최신 체크포인트 찾기
+# 자동으로 어댑터 경로 찾기 (final_adapter 우선, 없으면 최신 checkpoint)
 if ADAPTER_PATH is None:
     import glob
+    final_path = "./output_full/final_adapter"
     checkpoints = glob.glob("./output_full/checkpoint-*")
-    if not checkpoints:
-        print("Error: No checkpoints found in ./output_full")
+    
+    if os.path.exists(final_path):
+        ADAPTER_PATH = final_path
+        print(f"Detected final adapter: {ADAPTER_PATH}")
+    elif checkpoints:
+        ADAPTER_PATH = max(checkpoints, key=lambda x: int(x.split("-")[-1]))
+        print(f"Auto-detected latest checkpoint: {ADAPTER_PATH}")
+    else:
+        print("Error: No adapter or checkpoints found in ./output_full")
         exit(1)
-    # 숫자 기준으로 정렬 (checkpoint-100, checkpoint-200 ...)
-    ADAPTER_PATH = max(checkpoints, key=lambda x: int(x.split("-")[-1]))
-    print(f"Auto-detected latest checkpoint: {ADAPTER_PATH}")
 
 print(f"Loading base model: {BASE_MODEL_ID}")
-# Base Model 로드
-base_model = Qwen3VLForConditionalGeneration.from_pretrained(
+# Base Model 로드 (메모리 절약을 위해 bf16 및 low_cpu_mem_usage 사용)
+base_model = AutoModelForImageTextToText.from_pretrained(
     BASE_MODEL_ID,
     torch_dtype=torch.bfloat16,
+    device_map="cpu", # 병합은 보통 CPU에서 메모리를 많이 쓰므로 명시적 지정 혹은 auto
+    low_cpu_mem_usage=True
 )
 processor = AutoProcessor.from_pretrained(BASE_MODEL_ID)
 
