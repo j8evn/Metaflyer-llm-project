@@ -2,17 +2,18 @@ import os
 import requests
 from PIL import Image
 from io import BytesIO
+import json
 
 NAVER_CLIENT_ID = "UvhrrH5qgzxFlnYFmkTf"
 NAVER_CLIENT_SECRET = "ICOBFihYe7"
 API_ENDPOINT = "https://openapi.naver.com/v1/search/image"
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PEOPLE_LIST_JSON = os.path.join(BASE_DIR, "config/people.json")
-SAVE_DIR = os.path.join(BASE_DIR, "data/test") # 테스트용 이미지 저장 폴더
-IMAGES_PER_PERSON = 5 # 인물당 5장씩만 수집
+SAVE_DIR = os.path.join(BASE_DIR, "data/test") 
+
+TEST_IMAGES_COUNT = 5 
 
 def load_target_people():
-    import json
     if os.path.exists(PEOPLE_LIST_JSON):
         with open(PEOPLE_LIST_JSON, "r", encoding="utf-8") as f:
             return json.load(f)
@@ -20,10 +21,9 @@ def load_target_people():
 
 TARGET_PEOPLE = load_target_people()
 
-def get_image_urls(query, count):
+def get_image_urls(query):
     """
-    Naver 검색 API를 사용하여 이미지 URL 리스트를 반환합니다.
-    학습 데이터와 겹치지 않게 하기 위해 start 파라미터를 조정합니다.
+    Naver 검색 API를 사용하여 이미지 URL 리스트 반환
     """
     print(f"Fetching Test URLs for {query}...")
     urls = []
@@ -33,11 +33,10 @@ def get_image_urls(query, count):
         "X-Naver-Client-Secret": NAVER_CLIENT_SECRET
     }
     
-    # 학습 데이터가 100개였으므로, 101번째부터 검색하여 겹침 방지
     params = {
         "query": query,
-        "display": count,
-        "start": 101, 
+        "display": 20, 
+        "start": 41,   
         "sort": "sim",
         "filter": "large"
     }
@@ -60,32 +59,48 @@ def main():
     if not os.path.exists(SAVE_DIR):
         os.makedirs(SAVE_DIR)
 
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    }
+
     for name, query in TARGET_PEOPLE.items():
         person_dir = os.path.join(SAVE_DIR, query.replace(" ", "_"))
-        if not os.path.exists(person_dir):
+        
+        # 이미 충분히 수집되었다면 스킵
+        if os.path.exists(person_dir):
+            existing_files = [f for f in os.listdir(person_dir) if f.endswith('.jpg')]
+            if len(existing_files) >= TEST_IMAGES_COUNT:
+                print(f"Skipping Test {name}: already has {len(existing_files)} images.")
+                continue
+        else:
             os.makedirs(person_dir)
             
-        urls = get_image_urls(query, IMAGES_PER_PERSON)
+        urls = get_image_urls(query)
         
-        count = 0
-        for i, url in enumerate(urls):
+        saved_count = len([f for f in os.listdir(person_dir) if f.endswith('.jpg')])
+        for url in urls:
+            if saved_count >= TEST_IMAGES_COUNT:
+                break
+                
             try:
                 # 이미지 다운로드
-                resp = requests.get(url, timeout=10)
+                resp = requests.get(url, headers=headers, timeout=10)
+                resp.raise_for_status()
+                
                 img = Image.open(BytesIO(resp.content)).convert("RGB")
                 
-                # 파일 저장 (test_ 접두사 추가)
-                filename = f"test_{query.replace(' ', '_')}_{i:03d}.jpg"
+                # 파일 저장
+                filename = f"test_{query.replace(' ', '_')}_{saved_count:03d}.jpg"
                 filepath = os.path.join(person_dir, filename)
                 img.save(filepath)
                 
-                count += 1
-                print(f"Saved {filepath}")
+                saved_count += 1
+                print(f"[{name}] Saved Test {saved_count}/{TEST_IMAGES_COUNT}: {filename}")
                 
             except Exception as e:
-                print(f"Failed to download {url}: {e}")
+                continue
 
-        print(f"Finished {name}: {count} test images saved.")
+        print(f"Finished {name}: {saved_count} test images total.")
 
 if __name__ == "__main__":
     main()

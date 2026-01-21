@@ -34,7 +34,7 @@ python scripts/fetch_images.py
 python scripts/fetch_test_images.py
 
 # 3. 데이터 정제 및 얼굴 인식/크롭
-python scripts/clean_data.py
+python scripts/preprocess_data.py
 ```
 
 ### 2. 모델 학습 (Training)
@@ -54,8 +54,13 @@ python scripts/merge_lora.py
 ### 4. 서버 서빙 및 테스트
 vLLM을 사용하여 배포하고 API 요청을 보냅니다.
 ```bash
-# 1. vLLM 서버 기동 (안정적인 V0 엔진 사용 권장)
-VLLM_USE_V1=0 vllm serve ./models/merged --port 8100 --gpu_memory_utilization 0.9 --trust-remote-code
+# 1. vLLM 서버 기동 (안격적인 V0 엔진 사용 권장, 백그라운드 실행)
+export CUDA_VISIBLE_DEVICES=1  # 사용할 GPU 번호
+nohup env VLLM_USE_V1=0 vllm serve ./models/merged \
+    --port 8100 \
+    --gpu_memory_utilization 0.9 \
+    --trust-remote-code \
+    > logs/vllm.log 2>&1 &
 
 # 2. 인물 식별 테스트
 python scripts/test_api.py data/test/아이유/test_아이유_000.jpg
