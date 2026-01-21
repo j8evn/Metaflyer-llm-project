@@ -10,3 +10,5 @@ numpy
 requests
 tqdm
 qwen-vl-utils
+bitsandbytes
+av
