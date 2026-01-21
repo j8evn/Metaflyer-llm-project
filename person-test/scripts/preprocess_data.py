@@ -5,85 +5,30 @@ import numpy as np
 from tqdm import tqdm
 import torch
 from PIL import Image
-from facenet_pytorch import InceptionResnetV1
-from torchvision import transforms
 
 # 설정
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(BASE_DIR, "data/train")
 TEST_DATA_DIR = os.path.join(BASE_DIR, "data/test")
 REJECTED_DIR = os.path.join(BASE_DIR, "data/rejected")
-REF_DIR = os.path.join(BASE_DIR, "data/reference")
 DATASET_JSON = os.path.join(BASE_DIR, "data/dataset.json")
 CHECK_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
-SIMILARITY_THRESHOLD = 0.6 # 이 값보다 거리가 멀면 거절 (0~2 사이, 낮을수록 비슷)
 
 def setup_directories():
     if not os.path.exists(REJECTED_DIR):
         os.makedirs(REJECTED_DIR)
     
     # 거절 사유별 폴더 생성
-    for reason in ["face_count_mismatch", "identity_mismatch", "error"]:
+    for reason in ["face_count_mismatch", "error"]:
         path = os.path.join(REJECTED_DIR, reason)
         if not os.path.exists(path):
             os.makedirs(path)
 
-    if not os.path.exists(REF_DIR):
-        os.makedirs(REF_DIR)
-        print(f"Created reference directory: {REF_DIR}")
-        print("Please put reference images (e.g. '아이유_ref.jpg') in this folder.")
-
-def get_embedding(resnet, image_bgr):
-    """
-    OpenCV(BGR) 이미지를 받아서 FaceNet 임베딩(Tensor)을 반환
-    """
-    try:
-        # BGR -> RGB
-        img_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
-        img_pil = Image.fromarray(img_rgb)
-        
-        # Resize to 160x160 (FaceNet Input)
-        img_pil = img_pil.resize((160, 160))
-        
-        # To Tensor
-        img_tensor = transforms.functional.to_tensor(img_pil)
-        
-        # Standardize (Whiten)
-        mean, std = img_tensor.mean(), img_tensor.std()
-        img_tensor = (img_tensor - mean) / std
-        
-        # Add batch dimension and run model
-        with torch.no_grad():
-            embedding = resnet(img_tensor.unsqueeze(0))
-            
-        return embedding
-    except Exception as e:
-        print(f"Embedding error: {e}")
-        return None
-
-def load_reference_embeddings(resnet):
-    embeddings = {}
-    if not os.path.exists(REF_DIR):
-        return embeddings
-        
-    print("Loading reference images...")
-    for file in os.listdir(REF_DIR):
-        if os.path.splitext(file)[1].lower() in CHECK_EXTENSIONS:
-            name = os.path.splitext(file)[0].replace("_ref", "")
-            
-            path = os.path.join(REF_DIR, file)
-            img = cv2.imread(path)
-            if img is not None:
-                emb = get_embedding(resnet, img)
-                if emb is not None:
-                    embeddings[name] = emb
-                    print(f"Loaded reference for: {name}")
-    return embeddings
-
-def process_image(image_path, face_cascade, resnet, ref_embeddings):
+def process_image(image_path, face_cascade):
     """
     1. 얼굴 감지 및 크롭
-    2. 동일인 검증 (Reference가 있을 경우)
+    2. 얼굴이 여러 개면 Reject (데이터 순도 유지)
+    3. 얼굴이 0개면 원본 사용 (Too many removed 방지용 Fallback)
     """
     try:
         image_np = cv2.imread(image_path)
@@ -100,38 +45,29 @@ def process_image(image_path, face_cascade, resnet, ref_embeddings):
             minSize=(30, 30)
         )
         
-        if len(faces) != 1:
+        if len(faces) == 0:
+            # 얼굴 인식 실패 시: 일단 원본 사용 (데이터 확보 우선)
+            cropped_face = image_np
+            reason = "no_face_fallback"
+        elif len(faces) > 1:
+            # 얼굴이 여러 개면: 누가 주인공인지 알 수 없으므로 Reject
             return False, "face_count_mismatch"
-
-        x, y, w, h = faces[0]
-        margin_x = int(w * 0.5)
-        margin_y = int(h * 0.5)
-        
-        start_x = max(0, x - margin_x)
-        start_y = max(0, y - margin_y)
-        end_x = min(width, x + w + margin_x)
-        end_y = min(height, y + h + margin_y)
-        
-        cropped_face = image_np[start_y:end_y, start_x:end_x]
-        
-        folder_name = os.path.basename(os.path.dirname(image_path))
-        person_name = folder_name
-        
-        if not person_name or person_name in ["train", "test"]:
-             person_name = os.path.basename(image_path).split('_')[0]
-
-        if person_name in ref_embeddings:
-            current_emb = get_embedding(resnet, cropped_face)
-            ref_emb = ref_embeddings[person_name]
+        else:
+            # 얼굴이 딱 하나면: 크롭 진행
+            x, y, w, h = faces[0]
+            margin_x = int(w * 0.5)
+            margin_y = int(h * 0.5)
             
-            if current_emb is not None:
-                dist = (current_emb - ref_emb).norm().item()
-                if dist > SIMILARITY_THRESHOLD:
-                    print(f"Mismatch: {os.path.basename(image_path)} (Dist: {dist:.2f})")
-                    return False, "identity_mismatch"
+            start_x = max(0, x - margin_x)
+            start_y = max(0, y - margin_y)
+            end_x = min(width, x + w + margin_x)
+            end_y = min(height, y + h + margin_y)
+            
+            cropped_face = image_np[start_y:end_y, start_x:end_x]
+            reason = "cropped"
 
         cv2.imwrite(image_path, cropped_face)
-        return True, "cropped"
+        return True, reason
 
     except Exception as e:
         print(f"Error processing {image_path}: {e}")
@@ -157,7 +93,7 @@ def validate_and_update_dataset():
             json.dump(cleaned_data, f, indent=4, ensure_ascii=False)
         print(f"Updated dataset.json: Removed {removed_count} entries.")
 
-def process_directory(directory, face_cascade, resnet, ref_embeddings):
+def process_directory(directory, face_cascade):
     print(f"Scanning directory: {directory}...")
     image_files = []
     for root, dirs, files in os.walk(directory):
@@ -176,7 +112,7 @@ def process_directory(directory, face_cascade, resnet, ref_embeddings):
     rejected_count = 0
     
     for image_path in tqdm(image_files):
-        success, reason = process_image(image_path, face_cascade, resnet, ref_embeddings)
+        success, reason = process_image(image_path, face_cascade)
         
         if success:
             success_count += 1
@@ -194,22 +130,16 @@ def process_directory(directory, face_cascade, resnet, ref_embeddings):
     print(f"[{directory}] Total: {processed_count}, Success: {success_count}, Rejected: {rejected_count}")
 
 def main():
-    print("Initializing Neural Networks...")
+    print("Initializing Face Detection...")
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-    resnet = InceptionResnetV1(pretrained='vggface2').eval()
     
     setup_directories()
-    ref_embeddings = load_reference_embeddings(resnet)
     
-    if not ref_embeddings:
-        print("Note: No reference images found in data/reference.")
-        print("Identity verification will be skipped.")
-    
-    process_directory(DATA_DIR, face_cascade, resnet, ref_embeddings)
+    process_directory(DATA_DIR, face_cascade)
     
     if os.path.exists(TEST_DATA_DIR):
         print("-" * 30)
-        process_directory(TEST_DATA_DIR, face_cascade, resnet, ref_embeddings)
+        process_directory(TEST_DATA_DIR, face_cascade)
     
     print("-" * 30)
     validate_and_update_dataset()

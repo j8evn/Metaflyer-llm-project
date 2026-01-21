@@ -7,7 +7,6 @@ huggingface_hub
 torchvision
 opencv-python
 numpy
-facenet-pytorch
 requests
 tqdm
 qwen-vl-utils
