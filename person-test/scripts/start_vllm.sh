@@ -19,6 +19,15 @@ echo "Logging to: $LOG_FILE"
 fuser -k 18001/tcp > /dev/null 2>&1
 
 # 가상환경의 python을 사용하여 실행 (CUDA 도구 체인 오류 방지)
+# 만약 vllm이 없으면 설치 시도 (처음 한 번만)
+if ! "$PYTHON_BIN" -c "import vllm" > /dev/null 2>&1; then
+    echo "vLLM not found in venv. Attempting to install..."
+    "$PYTHON_BIN" -m pip install vllm==0.14.0 --extra-index-url https://download.pytorch.org/whl/cu121
+fi
+
+# 가상환경의 python으로 vLLM 실행
+# MoE 모델의 FlashAttention 커널 충돌 방지를 위해 XFORMERS나 TRITON 백엔드 시도 고려 가능
+# 여기서는 일단 기본 설정을 유지하되, 에러 발생 시 --attention-backend 설정을 참고바람
 VLLM_USE_V1=0 CUDA_VISIBLE_DEVICES=1 nohup "$PYTHON_BIN" -m vllm.entrypoints.openai.api_server \
   --model "$MODEL_PATH" \
   --host 0.0.0.0 \
