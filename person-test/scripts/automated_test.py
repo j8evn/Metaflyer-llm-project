@@ -32,13 +32,13 @@ def test_inference(image_path):
             {
                 "role": "user", 
                 "content": [
-                    {"type": "text", "text": "이 인물의 이름만 대답해주세요."},
                     {
                         "type": "image_url",
                         "image_url": {
                             "url": f"data:image/jpeg;base64,{base64_image}"
                         }
-                    }
+                    },
+                    {"type": "text", "text": "이 인물은 누구입니까?"}
                 ]
             }
         ],
